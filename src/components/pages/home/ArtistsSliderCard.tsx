@@ -13,10 +13,11 @@ type Props = {
   twitter_count: number,
   spotify_count: number,
   soundcloud_count: number,
-  instagram_count: number
+  instagram_count: number;
+  albumsCount: number
 };
 
-const ArtistsSliderCard = ({ img_, name_, id_, views, monthly_listeners, facebook_count, youtube_count, twitter_count, spotify_count, soundcloud_count, instagram_count }: Props) => {
+const ArtistsSliderCard = ({ img_, name_, id_, views, albumsCount, monthly_listeners, facebook_count, youtube_count, twitter_count, spotify_count, soundcloud_count, instagram_count }: Props) => {
   const formatNumber = (num: number): string => {
     if (num >= 1_000_000_000) {
       return (num / 1_000_000_000).toFixed(1) + 'B';
@@ -79,7 +80,7 @@ const ArtistsSliderCard = ({ img_, name_, id_, views, monthly_listeners, faceboo
             {formatNumber(soundcloud_count + spotify_count + twitter_count + youtube_count + facebook_count + instagram_count)} social followers
           </h5>
           <h5 style={{ textAlign: 'center' }}>
-            97 photos
+            {formatNumber(albumsCount)} photos
           </h5>
         </div>
       </div>

@@ -2,7 +2,7 @@
 import { artistCardData } from "@/../public/data/artistsCardData";
 import LoadMore from "@/components/shared/LoadMore";
 import SelectBox from "@/components/shared/SelectBox";
-import {IconFilter, IconSearch } from "@tabler/icons-react";
+import { IconFilter, IconSearch } from "@tabler/icons-react";
 import ArtistsSliderCard from "../home/ArtistsSliderCard";
 import { fetchData } from "@/utils/fetchData";
 import { ChangeEvent, useEffect, useState } from "react";
@@ -27,10 +27,14 @@ const sortMode = [
 ];
 
 const genres = [
-  { label: "All Artists" },
-  { label: "New Artists" },
-  { label: "Expert Artists" },
+  { label: "All" },
+  { label: "Hip Hop" },
+  { label: "Rock" },
+  { label: "Pop" },
+  { label: "Reggae" },
+  { label: "Jazz" },
 ];
+
 const PopularArtists = () => {
 
   const [artists, setArtists] = useState([])
@@ -40,6 +44,7 @@ const PopularArtists = () => {
   const sq = useSearchParams();
   const router = useRouter()
   const [selectedSort, setSelectedSort] = useState(sortMode[2]);
+  const [genreValue, setGenresValue] = useState('All')
 
   useEffect(() => {
     console.log(selectedSort);
@@ -93,6 +98,17 @@ const PopularArtists = () => {
     }
   };
 
+  const getArtistByGenres = async (vl: { label: string }, page?: number) => {
+    try {
+      const res = await api.server.POST(`/data/artists/genre`, { genre: vl?.label, page: page }, '')
+      const data = await res.json()
+      if (data.status) setArtists(data.artists)
+      console.log('data', data.artists);
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
   useEffect(() => {
     const run = async () => {
       const q = sq.get('query')
@@ -107,7 +123,7 @@ const PopularArtists = () => {
 
   return (
     // <!--genres section-->
-    <section className="trending__section pr-24 pl-24 pb-100">  
+    <section className="trending__section pr-24 pl-24 pb-100">
       <div className="trending__selected mb-30 d-flex align-items-center justify-content-center justify-content-lg-between">
         <div className="select__lefts d-flex align-items-center">
           <form
@@ -124,96 +140,24 @@ const PopularArtists = () => {
           />
         </div>
         <ul className="nav nav-tabs" id="myTab" role="tablist">
-          <li className="nav-item" role="presentation">
-            <button
-              className="nav-link active"
-              id="home-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#home-tab-pane"
-              type="button"
-              role="tab"
-              aria-controls="home-tab-pane"
-              aria-selected="true"
-              aria-label="home-tab"
-            >
-              All
-            </button>
-          </li>
-          <li className="nav-item" role="presentation">
-            <button
-              className="nav-link"
-              id="profile-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#profile-tab-pane"
-              type="button"
-              role="tab"
-              aria-controls="profile-tab-pane"
-              aria-selected="false"
-              aria-label="profile-tab"
-            >
-              HIP-HOP
-            </button>
-          </li>
-          <li className="nav-item" role="presentation">
-            <button
-              className="nav-link"
-              id="contact-tab"
-              aria-label="contact-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#contact-tab-pane"
-              type="button"
-              role="tab"
-              aria-controls="contact-tab-pane"
-              aria-selected="false"
-            >
-              ROCK
-            </button>
-          </li>
-          <li className="nav-item" role="presentation">
-            <button
-              className="nav-link "
-              id="home-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#home-tab-pane"
-              type="button"
-              role="tab"
-              aria-controls="home-tab-pane"
-              aria-selected="true"
-              aria-label="home-tab"
-            >
-              POP
-            </button>
-          </li>
-          <li className="nav-item" role="presentation">
-            <button
-              className="nav-link"
-              id="profile-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#profile-tab-pane"
-              type="button"
-              role="tab"
-              aria-controls="profile-tab-pane"
-              aria-selected="false"
-              aria-label="profile-tab"
-            >
-              REGGAE
-            </button>
-          </li>
-          <li className="nav-item" role="presentation">
-            <button
-              className="nav-link"
-              id="contact-tab"
-              aria-label="contact-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#contact-tab-pane"
-              type="button"
-              role="tab"
-              aria-controls="contact-tab-pane"
-              aria-selected="false"
-            >
-              JAZZ
-            </button>
-          </li>
+          {genres.map(({ label }) => (
+            <li key={label} className="nav-item" role="presentation">
+              <button
+                className={`nav-link ${label === genreValue ? 'active' : ''}`}
+                id="home-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#home-tab-pane"
+                type="button"
+                role="tab"
+                aria-controls="home-tab-pane"
+                aria-selected="true"
+                aria-label="home-tab"
+                onClick={() => { setGenresValue(label); getArtistByGenres({ label }); }}
+              >
+                {label}
+              </button>
+            </li>
+          ))}
         </ul>
       </div>
       <div className="container-fluid">
