@@ -1,0 +1,28 @@
+.filterButton {
+    background-color: 'grey';
+    /* / Primary button color / */
+    color: black;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .filterButton:hover {
+    background-color: #0056b3;
+    /* / Darker shade for hover effect / */
+    transform: scale(1.05);
+    /* / Slightly enlarge on hover / */
+    color: white;
+  }
+  
+  .filterButton:focus {
+    outline: none;
+    /* / Removes the outline to keep the design clean / */
+  }
+  
+  .filterButton .me-2 {
+    margin-right: 8px;
+    /* / Adjusts space between icon and text / */
+  }

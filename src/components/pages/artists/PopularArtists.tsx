@@ -2,60 +2,56 @@
 import { artistCardData } from "@/../public/data/artistsCardData";
 import LoadMore from "@/components/shared/LoadMore";
 import SelectBox from "@/components/shared/SelectBox";
-import { IconFilter, IconSearch } from "@tabler/icons-react";
+import {IconFilter, IconSearch } from "@tabler/icons-react";
 import ArtistsSliderCard from "../home/ArtistsSliderCard";
 import { fetchData } from "@/utils/fetchData";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import api from "@/lib/api";
-const artists = [
-  { label: "Tom Cook" },
-  { label: "Tanya Fox" },
-  { label: "Hellen Schmidt" },
+
+const sortMode = [
+  { label: "Most Item First" },
+  { label: "RIP" },
+  { label: "Views" },
+  { label: "A-Z" },
+  { label: "Z-A" },
+  { label: "Youngest to Oldest" },
+  { label: "Oldest to Youngest" },
+  { label: "Recently Updated" },
+  { label: "Birthday" },
+  { label: "Monthly Listners" },
+  { label: "Social Followers" },
+  { label: "Most Photos" },
+  { label: "Following" },
 ];
 
 const genres = [
-  { label: "All" },
-  { label: "Hip Hop" },
-  { label: "Rock" },
-  { label: "Pop" },
-  { label: "Reggae" },
-  { label: "Jazz" },
+  { label: "All Artists" },
+  { label: "New Artists" },
+  { label: "Expert Artists" },
 ];
-
-const views = [
-  { label: "Views" },
-  { label: "Most Item First" },
-  { label: "RIP" },
-  { label: "A-Z" },
-  { label: "Z-A" },
-  { label: "youngest To Oldest" },
-  { label: "Oldest To Youngest" },
-  { label: "Recently Updated" },
-  { label: "Birthday" },
-  { label: "Monthly Listeners" },
-  { label: "Social Followers" },
-  { label: " Most Photos" },
-  { label: "Following" }
-]
 const PopularArtists = () => {
 
   const [artists, setArtists] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(0)
-  const [genreValue, setGenresValue] = useState('All')
   const [query, setQuery] = useState('')
   const sq = useSearchParams();
   const router = useRouter()
+  const [selectedSort, setSelectedSort] = useState(sortMode[2]);
 
-  console.log(artists)
+  useEffect(() => {
+    console.log(selectedSort);
+  }, [selectedSort])
 
   useEffect(() => {
 
     const getData = async () => {
       let data = await fetchData('/data/artists', 1, 12)
       data.artists && setArtists(data.artists)
+      console.log(data.artists);
+
     }
 
     getData()
@@ -73,6 +69,29 @@ const PopularArtists = () => {
     }
   }
 
+  const handleFilterChange = async (e) => {
+    const filterData = {
+      gender: e.target.name === 'gender' ? e.target.value : undefined,
+      ageFilter: e.target.name === 'age' ? e.target.value : undefined,
+      groupType: e.target.name === 'groupType' ? e.target.value : undefined,
+    };
+    filterArtists(filterData);
+  };
+
+  const filterArtists = async (filterData) => {
+    try {
+      const res = await api.server.POST(
+        `/data/artists/filter`,
+        filterData,
+        ""
+      );
+      const data = await res.json();
+      if (data.status) setArtists(data.artists);
+      console.log("Filtered artists:", data.artists);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   useEffect(() => {
     const run = async () => {
@@ -86,39 +105,9 @@ const PopularArtists = () => {
     run()
   }, [])
 
-  const getArtistByGenres = async (vl: { label: string }, page?: number) => {
-    try {
-      const res = await api.server.POST(`/data/artists/genre`, { genre: vl?.label, page: page }, '')
-      const data = await res.json()
-      if (data.status) setArtists(data.artists)
-      console.log('data', data.artists);
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
-  const getArtistsBySortingMode = async (vl: { label: string }, page?: number) => {
-    try {
-      const res = await api.server.POST(`/data/artists/sortmode`, { filter: vl?.label, page: page }, '')
-      const data = await res.json()
-      if (data.status) setArtists(data.artists)
-      console.log('data', data.artists);
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
-
-  const loadMore = async () => {
-    if (genreValue !== "All") {
-      getArtistByGenres({ label: genreValue }, 2)
-    } else {
-      const data = await fetchData('/data/artists', (artists.length <= 12) ? 2 : artists.length / 12, 12)
-      data.status ? setArtists(prev => ([...prev, ...data.artists])) : null
-    }
-  }
-
   return (
     // <!--genres section-->
-    <section className="trending__section pr-24 pl-24 pb-100">
+    <section className="trending__section pr-24 pl-24 pb-100">  
       <div className="trending__selected mb-30 d-flex align-items-center justify-content-center justify-content-lg-between">
         <div className="select__lefts d-flex align-items-center">
           <form
@@ -130,28 +119,11 @@ const PopularArtists = () => {
               <IconSearch />
             </button>
           </form>
-          {/* <SelectBox options={artists} /> */}
-          {/* <SelectBox onChange={(vl: { label: string }) => getArtistByGenres(vl)} options={genres} /> */}
-          <SelectBox onChange={(vl: { label: string }) => getArtistsBySortingMode(vl)} options={views} />
+          <SelectBox
+            options={sortMode}
+          />
         </div>
-
-
-        <div className="rounded-5 bg-dark d-flex align-items-center">
-          {genres.map((option, personIdx) => (
-            <button key={personIdx} style={{padding:"12px 38px"}} className={`btn rounded-5 border-0 ${genreValue === option.label ? 'btn-success' : 'text-white'}`} onClick={() => { getArtistByGenres({ label: option.label }); setGenresValue(option.label) }}>{option.label}</button>
-          ))}
-        </div>
-
-
-        {/* <div>
-          <button className="cmn--btn">
-            <span>
-              <IconFilter />
-              Filter
-            </span>
-          </button>
-        </div> */}
-        {/* <ul className="nav nav-tabs" id="myTab" role="tablist">
+        <ul className="nav nav-tabs" id="myTab" role="tablist">
           <li className="nav-item" role="presentation">
             <button
               className="nav-link active"
@@ -164,7 +136,7 @@ const PopularArtists = () => {
               aria-selected="true"
               aria-label="home-tab"
             >
-              Featured
+              All
             </button>
           </li>
           <li className="nav-item" role="presentation">
@@ -179,7 +151,7 @@ const PopularArtists = () => {
               aria-selected="false"
               aria-label="profile-tab"
             >
-              Popular
+              HIP-HOP
             </button>
           </li>
           <li className="nav-item" role="presentation">
@@ -194,10 +166,55 @@ const PopularArtists = () => {
               aria-controls="contact-tab-pane"
               aria-selected="false"
             >
-              Newest
+              ROCK
             </button>
           </li>
-        </ul> */}
+          <li className="nav-item" role="presentation">
+            <button
+              className="nav-link "
+              id="home-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#home-tab-pane"
+              type="button"
+              role="tab"
+              aria-controls="home-tab-pane"
+              aria-selected="true"
+              aria-label="home-tab"
+            >
+              POP
+            </button>
+          </li>
+          <li className="nav-item" role="presentation">
+            <button
+              className="nav-link"
+              id="profile-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#profile-tab-pane"
+              type="button"
+              role="tab"
+              aria-controls="profile-tab-pane"
+              aria-selected="false"
+              aria-label="profile-tab"
+            >
+              REGGAE
+            </button>
+          </li>
+          <li className="nav-item" role="presentation">
+            <button
+              className="nav-link"
+              id="contact-tab"
+              aria-label="contact-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#contact-tab-pane"
+              type="button"
+              role="tab"
+              aria-controls="contact-tab-pane"
+              aria-selected="false"
+            >
+              JAZZ
+            </button>
+          </li>
+        </ul>
       </div>
       <div className="container-fluid">
         <div className="tab-content" id="myTabContent">
@@ -218,7 +235,10 @@ const PopularArtists = () => {
               ))}
               <div className="text-center mt-40">
                 <button className="cmn__simple2"
-                  onClick={loadMore}
+                  onClick={async () => {
+                    const data = await fetchData('/data/artists', (artists.length <= 12) ? 2 : artists.length / 12, 12)
+                    data.status ? setArtists(prev => ([...prev, ...data.artists])) : null
+                  }}
                 >
                   Load More</button>
               </div>
@@ -241,7 +261,10 @@ const PopularArtists = () => {
               ))}
               <div className="text-center mt-40">
                 <button className="cmn__simple2"
-                  onClick={loadMore}
+                  onClick={async () => {
+                    const data = await fetchData('/data/artists', (artists.length <= 12) ? 2 : artists.length / 12, 12)
+                    data.status ? setArtists(prev => ([...prev, ...data.artists])) : null
+                  }}
                 >Load More</button>
               </div>
             </div>
@@ -263,7 +286,10 @@ const PopularArtists = () => {
               ))}
               <div className="text-center mt-40">
                 <button className="cmn__simple2"
-                  onClick={loadMore}
+                  onClick={async () => {
+                    const data = await fetchData('/data/artists', (artists.length <= 12) ? 2 : artists.length / 12, 12)
+                    data.status ? setArtists(prev => ([...prev, ...data.artists])) : null
+                  }}
                 >Load More</button>
               </div>
             </div>

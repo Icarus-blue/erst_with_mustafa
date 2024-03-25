@@ -12,8 +12,7 @@ const artists = () => {
   return (
     <>
       <BreadCrumb page="Popular Artists" />
-      <PopularArtists />
-      <FeaturedShows />
+      <PopularArtists />    
     </>
   );
 };
