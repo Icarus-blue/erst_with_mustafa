@@ -1,200 +1,233 @@
-.audio-modal {
-  position: fixed;
-  bottom: -300px;
-  left: 0;
+/* RemixDesign | woaichidapi@163.com | Redesigned by JimmyCheung */
+
+.audioplayer {
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
   width: 100%;
-  z-index: 999999;
-  transition: all 0.4s ease-in-out;
+  align-items: center;
+  border-radius: 4px;
 }
 
-.audio-modal-open {
-  bottom: 0;
+.audioplayer-playpause {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
 }
 
-.big__playbar {
-  .audioplayer:not(.audioplayer-playing) .audioplayer-playpause button {
-    content: "";
-    justify-content: center;
-    width: 0;
-    height: 0;
-    margin-left: 2px;
-    border-top: 7px solid transparent;
-    border-right: none;
-    border-bottom: 7px solid transparent;
-    border-left: 12px solid var(--white);
+.audioplayer:not(.audioplayer-playing) .audioplayer-playpause {
+  background: rgba(91, 130, 255, 0);
+  border: 1px solid #5b82ff;
+}
+
+.audioplayer:not(.audioplayer-playing) .audioplayer-playpause:hover {
+  background: rgba(91, 130, 255, 0.1);
+}
+
+.audioplayer-playing .audioplayer-playpause {
+  background: rgba(253, 79, 26, 0);
+  border: 1px solid #fd4f1a;
+}
+
+.audioplayer-playing .audioplayer-playpause:hover {
+  background: rgba(235, 79, 26, 0.1);
+}
+
+.audioplayer:not(.audioplayer-playing) .audioplayer-playpause a {
+  content: "";
+  justify-content: center;
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  border-top: 7px solid transparent;
+  border-right: none;
+  border-bottom: 7px solid transparent;
+  border-left: 12px solid #0059ff;
+}
+
+.audioplayer-playing .audioplayer-playpause a {
+  content: "";
+  display: flex;
+  justify-content: space-between;
+  width: 12px;
+  height: 14px;
+}
+
+.audioplayer-playing .audioplayer-playpause a::before,
+.audioplayer-playing .audioplayer-playpause a::after {
+  content: "";
+  width: 4px;
+  height: 14px;
+  background-color: #ffffff;
+}
+
+.audioplayer-time {
+  display: flex;
+  width: 40px;
+  justify-content: center;
+  font-size: 12px;
+  color: rgba(51, 51, 51, 0.6);
+}
+
+.audioplayer-time-current {
+  margin-left: 24px;
+
+  @media screen and (max-width: 768px) {
+    margin-left: 0px;
   }
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 12px 24px;
-  background: var(--cmnbox);
+}
+
+.audioplayer-time-duration {
+  margin-right: 24px;
+}
+
+.audioplayer-bar {
   position: relative;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  margin: 0 12px;
+  height: 12px;
+  flex-basis: 0;
+  flex-grow: 1;
+  cursor: pointer;
+}
+
+.audioplayer-bar::before {
+  content: "";
+  position: absolute;
+  top: 5px;
   width: 100%;
+  height: 2px;
+  background-color: #dde2e6;
+}
 
-  @media screen and (max-width: 850px) {
-    display: block;
-  }
+.audioplayer-bar > div {
+  position: absolute;
+  left: 0;
+  top: 5px;
+}
+.audioplayer-bar-loaded {
+  z-index: 1;
+  height: 2px;
+  background: #bec8d2;
+}
 
-  .middle__audioboxes {
-    margin-left: -100px;
+.audioplayer-bar-played {
+  flex-direction: row-reverse;
+  z-index: 2;
+  height: 2px;
+  background: -webkit-linear-gradient(left, #0059ff, #09b1fa);
+}
 
-    @media screen and (max-width: 850px) {
-      margin-left: 0;
-    }
-  }
-  .audioplayer-volume-adjust div div {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 2px;
-    background-color: var(--base);
-  }
-  .circle__add {
-    border: 1px solid var(--pra);
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    margin-right: 14px;
-  }
-  .cross__btnsnone {
-    padding: 0;
-    outline: none;
-    border: unset;
-    margin-left: 10px;
-  }
-  .leftside__text {
-    width: 150px;
-  }
-  .audioplayer-bar {
-    position: absolute;
-    top: -6px;
-    left: 0;
-    width: 99%;
-    .audioplayer-bar-loaded {
-      background: #6d6f72;
-    }
-    .audioplayer-bar-played {
-      background: var(--base);
-    }
-  }
-  .modal-switch {
-    position: absolute;
-    right: 49%;
-    gap: 32px;
+.audioplayer-bar-played::after {
+  display: flex;
+  position: absolute;
+  content: "";
+  box-sizing: border-box;
+  top: -5px;
+  right: -1px;
+  margin-right: -5px;
+  width: 12px;
+  height: 12px;
+  background-color: #fff;
+  border-radius: 6px;
+}
 
-    @media screen and (max-width: 850px) {
-      right: 60%;
-    }
+.audioplayer:not(.audioplayer-playing) .audioplayer-bar-played::after {
+  border: 2px solid #bec8d2;
+}
 
-    svg {
-      color: var(--pra);
-      @media screen and (max-width: 600px) {
-        display: none;
-      }
-    }
-  }
+.audioplayer-playing .audioplayer-bar-played::after {
+  border: 2px solid #0059ff;
+}
 
-  .audioplayer-playpause {
-    order: 9;
-    border: unset !important;
-    background: var(--base) !important;
-    width: 38px;
-    height: 38px;
-    color: var(--white);
-    @media screen and (max-width: 850px) {
-      margin-left: 250px;
-    }
-    @media screen and (max-width: 800px) {
-      margin-left: 220px;
-    }
-    @media screen and (max-width: 750px) {
-      margin-left: 180px;
-    }
+.audioplayer-volume {
+  display: flex;
+  align-items: center;
+}
 
-    @media screen and (max-width: 700px) {
-      margin-left: 150px;
-    }
+.audioplayer-volume-button {
+  display: flex;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
 
-    @media screen and (max-width: 650px) {
-      margin-left: 130px;
-    }
-    @media screen and (max-width: 600px) {
-      margin-left: auto;
-      margin-right: 0px;
-    }
-  }
-  .righttrun-one {
-    padding-left: 24px;
+.audioplayer-volume-button a {
+  display: flex;
+  width: 6px;
+  height: 8px;
+  background-color: #9a9fb0;
+  position: relative;
+}
 
-    @media screen and (max-width: 850px) {
-      position: absolute;
-      right: 250px;
-    }
-    @media screen and (max-width: 750px) {
-      position: absolute;
-      right: 260px;
-    }
+.audioplayer-volume-button a:before,
+.audioplayer-volume-button a:after {
+  content: "";
+  position: absolute;
+}
 
-    @media screen and (max-width: 650px) {
-      position: absolute;
-      right: 200px;
-    }
-    @media screen and (max-width: 600px) {
-      display: none;
-    }
-  }
-  .righttrun-two {
-    padding-left: 24px;
+.audioplayer-volume-button a:before {
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-right: 9px solid #9a9fb0;
+  border-bottom: 8px solid transparent;
+  border-left: none;
+  top: -4px;
+}
 
-    @media screen and (max-width: 850px) {
-      position: absolute;
-      right: 200px;
-    }
+.audioplayer:not(.audioplayer-mute) .audioplayer-volume-button a:after {
+  left: 10px;
+  top: -2px;
+  width: 6px;
+  height: 6px;
+  border: 6px double #9a9fb0;
+  border-width: 6px 6px 0 0;
+  border-radius: 0 12px 0 0;
+  transform: rotate(45deg);
+}
 
-    @media screen and (max-width: 650px) {
-      position: absolute;
-      right: 160px;
-    }
+.audioplayer-mute .audioplayer-volume-button a {
+  background-color: #fd4f1a;
+}
 
-    @media screen and (max-width: 600px) {
-      display: none;
-    }
-  }
-  .audioplayer-volume {
-    position: absolute;
-    right: 135px;
+.audioplayer-mute .audioplayer-volume-button a:before {
+  border-right: 9px solid #fd4f1a;
+}
 
-    @media screen and (max-width: 850px) {
-      right: 24px;
-    }
+.audioplayer-volume-adjust {
+  display: flex;
+  align-items: center;
+  margin-left: 8px;
+}
 
-    @media screen and (max-width: 600px) {
-      display: none;
-    }
-  }
-  .audioplayer-time {
-    color: var(--white);
-    border: 1px solid #212529;
-    border-radius: 100px;
-    padding: 4px 20px;
-    border-left: unset;
-    width: 60px;
-    order: 1;
-  }
-  .audioplayer-time.audioplayer-time-duration {
-    margin-right: 116px;
+.audioplayer-volume-adjust > div {
+  position: relative;
+  display: flex;
+  width: 60px;
+  height: 2px;
+  cursor: pointer;
+  background-color: #bec8d2;
+}
 
-    @media screen and (max-width: 850px) {
-      margin-right: 0px;
-    }
-  }
-  .audioplayer-time-current {
-    margin-right: 7px;
+.audioplayer-volume-adjust div div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background-color: #0059ff;
+}
+
+/* responsive | you can change the max-width value to match your theme */
+
+@media screen and (max-width: 679px) {
+  .audioplayer-volume-adjust {
+    display: none;
   }
 }

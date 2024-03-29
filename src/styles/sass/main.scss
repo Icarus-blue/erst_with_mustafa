@@ -1,22 +1,20 @@
 @font-face {
-  font-family: "borda"; /* The name you want to give to your font */
+  font-family: "borda";
+  /* The name you want to give to your font */
   src: url("../../../public/fonts/bordafont/Borda.ttf") format("truetype");
   src: url("../../../public/fonts/bordafont/Borda\ Bold.ttf") format("truetype");
   // src: url('../bordafont/Borda\ Italic.ttf') format('truetype');
   // src: url('../bordafont/Borda\ Bold\ Italic.ttf') format('truetype');
-  src: url("../../../public/fonts/bordafont/Borda\ DemiBold.ttf")
-    format("truetype");
+  src: url("../../../public/fonts/bordafont/Borda\ DemiBold.ttf") format("truetype");
   // src: url('../bordafont/Borda\ DemiBold\ Italic.ttf') format('truetype');
-  src: url("../../../public/fonts/bordafont/Borda\ ExtraBold.ttf")
-    format("truetype");
+  src: url("../../../public/fonts/bordafont/Borda\ ExtraBold.ttf") format("truetype");
   // src: url('../bordafont/Borda\ ExtraBold\ Italic.ttf') format('truetype');
-  src: url("../../../public/fonts/bordafont/Borda\ Light.ttf")
-    format("truetype");
+  src: url("../../../public/fonts/bordafont/Borda\ Light.ttf") format("truetype");
   // src: url('../bordafont/Borda\ Light\ Italic.ttf') format('truetype');
-  src: url("../../../public/fonts/bordafont/Borda\ Medium.ttf")
-    format("truetype");
+  src: url("../../../public/fonts/bordafont/Borda\ Medium.ttf") format("truetype");
   // src: url('../bordafont/Borda\ Medium\ Italic.ttf') format('truetype');
 }
+
 /*CSS Table Of Content Starts Here*/
 
 /*============================================ 
@@ -75,4 +73,90 @@
 audio::-webkit-media-controls-timeline,
 video::-webkit-media-controls-timeline {
   display: none;
+}
+
+.cmn--btn::before {
+  z-index: -1;
+}
+
+.tt-buttons {
+  display: block;
+  position: relative;
+  padding-left: 26px;
+  margin-bottom: 9px;
+  cursor: pointer;
+  font-size: 15px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  margin-right: 15px;
+}
+
+/* Hide the browser's default radio button */
+.tt-buttons input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Style the custom radio button */
+.custom-radio {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  height: 18px;
+  width: 18px;
+  // border-radius: 50%;
+  border: 1px solid #ccc;
+  background-color: #eaebee;
+  appearance: none;
+}
+
+/* On mouse-over, add a grey border */
+.tt-buttons:hover input~.custom-radio {
+  border-color: #999;
+}
+
+/* When the radio button is checked, add a blue background */
+.tt-buttons input:checked~.custom-radio {
+  background-color: #25A56A;
+  border-color: #25A56A;
+  height: 18px;
+  width: 18px;
+}
+
+/* Create the indicator (dot) */
+.custom-radio:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the dot when checked */
+.tt-buttons input:checked~.custom-radio:after {
+  display: block;
+}
+
+/* Style the dot */
+.custom-radio:after {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  // border-radius: 50%;
+}
+
+.wfc {}
+
+.accordion.accordion-flush {
+  width: fit-content;
+  margin-left: auto;
 }
